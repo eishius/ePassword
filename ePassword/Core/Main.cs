@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 using System.Threading;
 using ePassword.Api;
 using System.Text;
-
+using System.Diagnostics;
+using System.IO;
 namespace ePassword.Core
 {
     // Developed by Eishius.
@@ -12,18 +13,17 @@ namespace ePassword.Core
     {
         internal static void Startup()
         {
-            Thread.Sleep(4000);
-            Console.Clear();
-            Thread.Yield();
+            Thread.Sleep(1000);
             Con.Write("User: " + Environment.UserName);
             Thread.Sleep(2000);
             BuildPasswords();
             Console.ReadLine();
         }
+
         async static void BuildPasswords()
         {
+            Console.Clear();
             int PasswordAmount = 0;
-            bool v = false;
             Con.Write(Environment.UserName + " How many should we make?");
             PasswordAmount = int.Parse(Console.ReadLine());
             Thread.Sleep(1000);
@@ -38,23 +38,27 @@ namespace ePassword.Core
                 string password = "";
                 PasswordGenerator pwdGen1 = new PasswordGenerator(includeLowercase: true, includeUppercase: true, includeNumeric: true, includeSpecial: true, passwordLength: 35);
                 password = pwdGen1.Next();
-                PasswordGenerator pwdGen2 = new PasswordGenerator(includeLowercase: false, includeUppercase: true, includeNumeric: true, includeSpecial: true, passwordLength: 35);
+                PasswordGenerator pwdGen2 = new PasswordGenerator(includeLowercase: true, includeUppercase: true, includeNumeric: true, includeSpecial: true, passwordLength: 35);
                 password = pwdGen2.Next();
-                PasswordGenerator pwdGen3 = new PasswordGenerator(includeLowercase: true, includeUppercase: true, includeNumeric: true, includeSpecial: true, passwordLength: 35);
-                password = pwdGen3.Next();
-                PasswordGenerator pwdGen4 = new PasswordGenerator(includeLowercase: true, includeUppercase: true, includeNumeric: true, includeSpecial: true, passwordLength: 35);
-                password = pwdGen4.Next();
-                PasswordGenerator pwdGen5 = new PasswordGenerator(includeLowercase: true, includeUppercase: true, includeNumeric: true, includeSpecial: true, passwordLength: 35);
-                password = pwdGen5.Next();
-                PasswordGenerator pwdGen6 = new PasswordGenerator(includeLowercase: true, includeUppercase: true, includeNumeric: true, includeSpecial: true, passwordLength: 35);
-                password = pwdGen6.Next();
                 AllPasswords[i] = password.ToString();
             }
-
             foreach (string singlePassword in AllPasswords)
             {
-                await Task.Delay(PasswordAmount + 100);
+                await Task.Delay(100);
                 Con.Write("Password: " + singlePassword);
+                try
+                {
+                    var fileName = Directory.GetCurrentDirectory() + "/ePassword.eishius";
+                    if (File.Exists(fileName))
+                    {
+                        File.Delete(fileName);
+                    }
+                    File.WriteAllLines(fileName, AllPasswords);
+                }
+                catch (Exception e)
+                {
+                    Console.Write(e.ToString());
+                }
             }
         }
     }

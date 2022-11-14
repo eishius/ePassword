@@ -7,9 +7,9 @@ namespace ePassword.Api
         private const string LowercaseCharacters = "abcdefghijklmnopqrstuvwxyz";
         private const string UppercaseCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const string NumericCharacters = "0123456789";
-        private const string DefaultSpecialCharacters = "_";
-        private const int DefaultMinPasswordLength = 4;
-        private const int DefaultMaxPasswordLength = 256;
+        private const string DefaultSpecialCharacters = "-_";
+        private const int DefaultMinPasswordLength = 16;
+        private const int DefaultMaxPasswordLength = 1256;
         public string SpecialCharacters { get; set; }
 
         public PasswordSettings(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
